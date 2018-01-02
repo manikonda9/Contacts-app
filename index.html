@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contacts Search App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="angular.min.js"></script>
+	<script src="app.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl" ng-init="add=false">
+
+<div class="container">
+    <div id="startDiv">
+        <h2>Contacts Search App</h2>
+    </div>
+    <form class="container row">
+		<div class="col-md-8 col-sm-5"></div>
+        <div  id="addContact" class="col-md-2 col-sm-3 col-xs-4">
+            <button type="button" class="btn btn-success form-group" ng-click="showForm()">Add Contacts</button>
+        </div>
+        <div id="searchContacts" class="input-group col-md-2 col-sm-4 col-xs-8">
+            <input type="text" ng-model="test" class="form-control" placeholder="Search Contacts">
+            <div class="input-group-btn">
+                <button class="btn btn-success" type="submit">Search
+                </button>
+            </div>
+        </div>
+    </form>
+    </br>
+    <form name="userForm" class="row" ng-show="add">
+        <div class="form-group col-md-6">
+            <label>First Name :<span class="error" ng-show="userForm.firstName.$touched && userForm.firstName.$invalid">The first name required is Only Alphabetic Characters.</span></label>
+            <input type="text" name="firstName" ng-model="user.firstName" class="form-control" pattern="[A-Za-z]{1,20}" placeholder="First Name" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Last Name :<span class="error" ng-show="userForm.lastName.$touched && userForm.lastName.$invalid">The last name required is Only Alphabetic Characters.</span></label>
+            <input type="text" name="lastName" ng-model="user.lastName" class="form-control" pattern="[A-Za-z]{1,20}" placeholder="Last Name" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Contact Number : (Format: xxx-xxx-xxxx).<span class="error" ng-show="userForm.contactNumber.$touched && userForm.contactNumber.$invalid">The contact number required</span></label>
+            <input type="tel" name="contactNumber" ng-model="user.contactNumber" class="form-control" pattern="^\d{3}-\d{3}-\d{4}$" placeholder="Contact Number" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Contact Email : (Only  @cordis.us extensions)<span class="error" ng-show="userForm.contactEmail.$touched && userForm.contactEmail.$invalid">The Contact Email is required .</span></label>
+            <input type="email" name="contactEmail" ng-model="user.contactEmail" class="form-control"pattern="[a-zA-Z0-9._%+-]+@cordis.us$" placeholder="Contact Email" required>
+        </div>
+        <div class="form-group col-md-6">
+            <button type="submit" ng-disabled="userForm.$invalid" ng-click="addContact(user)" class="btn btn-success">Add Contact</button>
+        </div>
+    </form>
+    <h3 id="start">Contacts Table :</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Contact Number</th>
+                <th>Contact Email</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in myData | filter:test">
+                <td>{{$index+1}}</td>
+                <td><span ng-hide="editMode">{{x.firstName}}</span><input type="text" ng-show="editMode" ng-class="{ error: !x.firstName }" ng-model="x.firstName" class="form-control" ng-pattern="nameRegExp" ng-required></td>
+                <td><span ng-hide="editMode">{{x.lastName}}</span><input type="text" ng-show="editMode" ng-class="{ error: !x.lastName }" ng-model="x.lastName" class="form-control" ng-pattern="nameRegExp" ng-required></td>
+                <td>{{x.contactNumber}}</td>
+                <td><span ng-hide="editMode">{{x.contactEmail}}</span><input type="email" ng-show="editMode" ng-class="{ error: !x.contactEmail }" ng-model="x.contactEmail" class="form-control" ng-pattern="emailRegExp" ng-required></td>
+                <td>
+                    <button type="submit" ng-hide="editMode" ng-click="editMode = true; editContact(x)" class="btn btn-primary">Edit</button>
+                    <button type="submit" ng-show="editMode" ng-disabled="!x.lastName || !x.firstName || !x.contactNumber || !x.contactEmail" ng-click="editMode = false; saveContact()" class="btn btn-success">Save</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
